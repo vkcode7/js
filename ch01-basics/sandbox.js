@@ -1,5 +1,7 @@
 //modern javascript- from novice to ninja (Shun Pelling)
 
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript <- can tel which browser supposrts which feature
+//https://babeljs.io/ JS compiler
 //primitive types - number, string, boolean, null, undefined, symbols
 //reference types - all types of objects (object literals , arrays, functions, dates)
 
@@ -133,3 +135,71 @@ user.logout(-1);
 console.log(Math);
 console.log(Math.PI);
 console.log(Math.random()); //<-- generates a random number
+
+//rest - ES3 features
+//rest paramter - same as vararg 
+const doubleIt = (...nums) => {
+    console.log(nums);
+    return nums.map(num => num * 2);
+}
+
+const doubleRes = doubleIt(1,2,3,4,6);
+console.log(doubleRes);
+
+//spread syntax (arrays) - unpacks into individual components
+const peeps = ['shaun', 'ryu', 'crystal'];
+console.log(...peeps);
+const members = ['vk', ...peeps];
+console.log(members);
+
+//spread syntax (objects)
+const person = {name: 'shaun', age: 30, job: 'network admin'};
+const personClone = {...person, location: 'nyc'};
+console.log(personClone);
+
+//sets
+const namesArray = ['ryu', 'shaun', 'yoshi', 'ryu'];
+console.log(namesArray);
+
+const namesSet = new Set(namesArray);
+console.log(namesSet); //it removes the duplicates
+
+const uniqueNamesArray = [...namesSet]; //spread the values in new array
+console.log(uniqueNamesArray);
+
+//adding and removing elements to a set
+let ages = new Set();
+ages.add(20);
+ages.add(25).add(30).add(40);
+ages.add(25); //this will be ignored
+ages.delete(30);
+console.log(ages, ages.size);
+console.log(ages.has(25), ages.has(30));
+
+const ninjas = new Set([
+    {name: 'shaun', age:30},
+    {name: 'ryu', age:40},
+    {name: 'dave', age:50},
+]);
+
+ninjas.forEach(ninja => {
+    console.log(ninja.name, ninja,age);
+})
+
+const ninja = {};
+ninja.age = 25; //property notation
+ninja["name"] = 'shaun';
+ninja['name'] = 'ryu'; //overwrites
+
+console.log(ninja, typeof ninja);
+
+//Symbol as object key
+const sym1 = Symbol('testkey');
+const sym2 = Symbol('testkey');
+
+console.log(sym1 == sym2); //returns false
+
+ninja[sym1] = 'abc';
+ninja[sym2] = 'xyz';
+
+console.log(ninja); //prints both abc and xyz and sym1 and sym2 are considered different objects
