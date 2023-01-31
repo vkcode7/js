@@ -1,0 +1,165 @@
+This node.js package location:
+	•	Node.js v18.13.0 to /usr/local/bin/node
+	•	npm v8.19.3 to /usr/local/bin/npm
+
+npm init <- use it to create package.json
+
+Babel = conversion to compatible code
+=======
+to add bael/core and babel/cli use following cmd:
+npm install @babel/core @babel/cli --save-dev ### --save-dev saves it to our dev dependencies
+npm install @babel/preset-env --save-dev
+
+This will add babel packages to project and also update package.json
+
+After that create .babelrc file and add following lines to it.
+
+Next create a test js file before.js and use babel cli to convert it
+
+To do that run the following cmd on VS code Terminal:
+
+gs@GSs-MacBook-Pro ch19-nodejs % node_modules/.bin/babel before.js -o after.js 
+
+note: If node_modules folder is deleted, all you have to do is run "npm install". This 
+will look in packages.json and install all the dependencies.
+
+create js output in dist (distribution) folder.
+node_modules/.bin/babel src/index.js -o dist/assets/bundle.js
+
+instead of running the above command manually everytime a change is made, copy and paste it to scripts section in
+package.json and run "npm run babel"
+
+  "scripts": {
+    "babel": "node_modules/.bin/babel src/index.js -o dist/assets/bundle.js"
+  },
+
+to let the npm watch the changes and convert it anytime a change is made and saved, add -w flag
+
+  "scripts": {
+    "babel": "node_modules/.bin/babel src/index.js -w -o dist/assets/bundle.js"
+  },
+
+  (base) gs@GSs-MacBook-Pro ch19-nodejs % npm run babel
+
+> ch19-nodejs@1.0.0 babel
+> node_modules/.bin/babel src/index.js -w -o dist/assets/bundle.js
+
+The watcher is ready.
+
+Webpack = module bundler
+========
+
+takes multiple code diles and bundles them into one, works well with babel
+
+to work with webpack, stat by creating a webpack config file - webpack.config.js
+
+next install webpack in the project, --save-dev will update the package.json
+
+gs@GSs-MacBook-Pro ch19-nodejs % npm install webpack webpack-cli --save-dev
+
+next run the followimg cmd to generate the bindles js
+gs@GSs-MacBook-Pro ch19-nodejs % node_modules/.bin/webpack
+
+the dist/assets/bundle.js will now have minimized js code
+
+at the moment webpack doesnt convert the code to old supported js using bable.
+later on we will integrate babel with webpack for babel converted code.
+
+now just update the package.json
+ "scripts": {
+    "babel": "node_modules/.bin/babel src/index.js -w -o dist/assets/bundle.js",
+    "webpack": "node_modules/.bin/webpack"
+  },
+
+so that we can simply run "npm run webpack" in future for code conversion.
+
+export/import
+=============
+
+to export (use) functions in another js file, use export keyword with function body
+dom.js
+-----
+export const styleBody = () => {
+    body.style.background = 'peachpuff';
+};
+
+export const addTitle = (text) => {
+    const title = document.createElement('h1');
+    title.textContent = text;
+    body.appendChild(title);
+};
+
+export const contact = 'test@testmail.com';
+
+index.js
+-------
+import {styleBody, addTitle, contact} from './dom'; //.js is not needed
+console.log('index file');
+
+addTitle('Test');
+
+everytime we change we have to run "npm run webpack".
+
+instead we can add watch option -w in package.json and run "npm run webpack" once.
+
+webpack dev server
+===================
+
+In order to use webpack dev server as a web server we can run following cmd to install 
+webback dev server
+
+npm install webpack-dev-server@4.0.0
+
+configure web pack dev server (wpds) in webpack.config.jsvby adding devServer node.
+
+Next update the package.json by adding "serve"
+
+  "scripts": {
+    "babel": "node_modules/.bin/babel src/index.js -w -o dist/assets/bundle.js",
+    "webpack": "node_modules/.bin/webpack -w",
+    "server": "webpack-dev-server"
+  },
+
+Now run "npm run serve" to run our dev server and it will bundle up and run it in memory using virtual files.
+
+to run then webpack in build mode change above to:
+
+  "scripts": {
+    "build": "node_modules/.bin/webpack --mode production",
+    "serve": "webpack-dev-server --mode development"
+  }
+
+  Next run ==>
+  npm run build
+  npm run serve
+
+babel loaders
+=============
+
+used to convert JS code to widely supported syntax
+
+npm install babel-loader --save-dev
+
+next configure loader in webpack
+so webpack use babel-loader when code is run thru webpack system
+add following to do that in webback.config.js:
+
+        module: {
+            rules: [{
+                test: /\.js$/, //any file ending in .js, run it thru babel-loader
+                excludes: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            }]
+        }
+
+
+
+
+
+
+
