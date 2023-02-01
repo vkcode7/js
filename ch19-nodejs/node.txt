@@ -157,6 +157,9 @@ add following to do that in webback.config.js:
             }]
         }
 
+NOTE: To create a new project just copy the contents of boilerplate folder
+and in that folder run => npm install
+and => npm run serve
 
 
 
